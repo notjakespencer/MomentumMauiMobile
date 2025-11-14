@@ -2,23 +2,27 @@
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
+
+            // Subscribe to the timer completion event
+            MyTimer.TimerCompleted += OnTimerCompleted;
         }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
+        private void OnStartClicked(object sender, EventArgs e)
         {
-            count++;
+            MyTimer.IsActive = true;
+        }
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+        private void OnStopClicked(object sender, EventArgs e)
+        {
+            MyTimer.IsActive = false;
+        }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+        private void OnTimerCompleted(object sender, EventArgs e)
+        {
+            DisplayAlert("Timer Complete", "The 2-minute timer has finished!", "OK");
         }
     }
 }

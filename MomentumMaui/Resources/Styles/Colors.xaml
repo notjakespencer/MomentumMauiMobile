@@ -6,19 +6,50 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
-    <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <!-- DARK THEME #292524 -->
+    <Color x:Key="DarkBackground">#0C0A09</Color>
+    <Color x:Key="DarkForeground">#FAFAF9</Color>
+    <Color x:Key="DarkCard">#1C1917</Color>
+    <Color x:Key="DarkCardForeground">#FAFAF9</Color>
+    <Color x:Key="DarkPrimary">#8B5CF6</Color>
+    <Color x:Key="DarkPrimaryForeground">#FFFFFF</Color>
+    <Color x:Key="DarkSecondary">#292524</Color>
+    <Color x:Key="DarkSecondaryForeground">#FAFAF9</Color>
+    <Color x:Key="DarkMuted">#292524</Color>
+    <Color x:Key="DarkMutedForeground">#A8A29E</Color>
+    <Color x:Key="DarkAccent">#292524</Color>
+    <Color x:Key="DarkAccentForeground">#FAFAF9</Color>
+    <Color x:Key="DarkBorder"></Color>
 
+    <!-- LIGHT THEME -->
+    <Color x:Key="LightBackground">#FAFAF9</Color>
+    <Color x:Key="LightForeground">#1C1917</Color>
+    <Color x:Key="LightCard">#FFFFFF</Color>
+    <Color x:Key="LightCardForeground">#1C1917</Color>
+    <Color x:Key="LightPrimary">#7C3AED</Color>
+    <Color x:Key="LightPrimaryForeground">#FFFFFF</Color>
+    <Color x:Key="LightSecondary">#F5F5F4</Color>
+    <Color x:Key="LightSecondaryForeground">#1C1917</Color>
+    <Color x:Key="LightMuted">#F5F5F4</Color>
+    <Color x:Key="LightMutedForeground">#78716C</Color>
+    <Color x:Key="LightAccent">#F5F5F4</Color>
+    <Color x:Key="LightAccentForeground">#1C1917</Color>
+    <Color x:Key="LightBorder">#E7E5E4</Color>
+
+    <!-- Basic Colors (for backward compatibility with old Styles.xaml) -->
+    <Color x:Key="Primary">#7C3AED</Color>
+    <Color x:Key="PrimaryDark">#8B5CF6</Color>
+    <Color x:Key="PrimaryDarkText">#242424</Color>
+    <Color x:Key="Secondary">#F5F5F4</Color>
+    <Color x:Key="SecondaryDarkText">#A8A29E</Color>
+    <Color x:Key="Tertiary">#2B0B98</Color>
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Magenta">#D600AA</Color>
     <Color x:Key="MidnightBlue">#190649</Color>
     <Color x:Key="OffBlack">#1f1f1f</Color>
 
+    <!-- Gray Scale -->
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>
     <Color x:Key="Gray300">#ACACAC</Color>
@@ -28,12 +59,22 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
-    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
-    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
-    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
-    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
-    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
-
+    <!-- Theme-aware brushes that automatically switch -->
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
+    <SolidColorBrush x:Key="ForegroundBrush" Color="{AppThemeBinding Light={StaticResource LightForeground}, Dark={StaticResource DarkForeground}}" />
+    <SolidColorBrush x:Key="CardBrush" Color="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}" />
+    <SolidColorBrush x:Key="CardForegroundBrush" Color="{AppThemeBinding Light={StaticResource LightCardForeground}, Dark={StaticResource DarkCardForeground}}" />
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{AppThemeBinding Light={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}" />
+    <SolidColorBrush x:Key="PrimaryForegroundBrush" Color="{AppThemeBinding Light={StaticResource LightPrimaryForeground}, Dark={StaticResource DarkPrimaryForeground}}" />
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{AppThemeBinding Light={StaticResource LightSecondary}, Dark={StaticResource DarkSecondary}}" />
+    <SolidColorBrush x:Key="SecondaryForegroundBrush" Color="{AppThemeBinding Light={StaticResource LightSecondaryForeground}, Dark={StaticResource DarkSecondaryForeground}}" />
+    <SolidColorBrush x:Key="MutedBrush" Color="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource DarkMuted}}" />
+    <SolidColorBrush x:Key="MutedForegroundBrush" Color="{AppThemeBinding Light={StaticResource LightMutedForeground}, Dark={StaticResource DarkMutedForeground}}" />
+    <SolidColorBrush x:Key="AccentBrush" Color="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource DarkAccent}}" />
+    <SolidColorBrush x:Key="AccentForegroundBrush" Color="{AppThemeBinding Light={StaticResource LightAccentForeground}, Dark={StaticResource DarkAccentForeground}}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource DarkBorder}}" />
+    
+    <!-- Legacy Brushes (for backward compatibility) -->
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
     <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>

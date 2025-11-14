@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { BookOpen, Calendar } from "lucide-react";
-import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Layout({ children, currentPageName }) {
