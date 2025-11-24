@@ -127,7 +127,7 @@ namespace MomentumMaui.Controls
 
                     canvas.DrawArc(centerX - radius, centerY - radius,
                         radius * 2, radius * 2,
-                        startAngle, endAngle, clockwise: false, closed: false);
+                        startAngle, endAngle, false, closed: false);
                 }
             }
         }

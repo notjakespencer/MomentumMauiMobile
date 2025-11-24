@@ -6,7 +6,20 @@ using System.Threading.Tasks;
 
 namespace Momentum.Shared.Models
 {
-    internal class Streak
+    public class Streak
     {
+        public int Current { get; set; }
+        public int Longest { get; set; }
+
+        public void Increment()
+        {
+            Current++;
+            if (Current > Longest) Longest = Current;
+        }
+
+        public void Reset()
+        {
+            Current = 0;
+        }
     }
 }

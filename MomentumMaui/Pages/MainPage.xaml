@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MomentumMaui.Controls"
+             x:Class="MomentumMaui.MainPage"
+             Title=""
+             Shell.NavBarIsVisible="False">
+
+
+    <Grid RowDefinitions="*, Auto" ColumnDefinitions="*">
+        <ScrollView Grid.Row="0">
+        <VerticalStackLayout
+            Padding="25,12"
+            Spacing="18"
+            VerticalOptions="Start">
+
+            <!--#region Stats Header -->
+            <!-- Stats Header -->
+            <Grid Margin="0, 4, 0, 0" HorizontalOptions="Fill" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Start">
+                <HorizontalStackLayout Grid.Column="0" Spacing="12" VerticalOptions="Center">
+
+                    <!-- Streak -->
+                    <Frame
+                        Background="{DynamicResource CardBrush}"
+                        BorderColor="{DynamicResource BorderBrush}"
+                        CornerRadius="12"
+                        Padding="10"
+                        HasShadow="True"
+                        VerticalOptions="Center" 
+                        HeightRequest="84">
+                        <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                            <Image x:Name="StreakIcon"
+                                     WidthRequest="28"
+                                     HeightRequest="28"
+                                     Aspect="AspectFit"
+                                     Source="flame.svg" />
+                            <VerticalStackLayout Spacing="2" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="76">
+                                <Label x:Name="StreakLabel"
+                                     Text="0"
+                                     FontSize="18"
+                                     FontAttributes="Bold"
+                                     HorizontalTextAlignment="Center" />
+                                <Label Text="DAY STREAK"
+                                     FontSize="12"
+                                     HorizontalTextAlignment="Center" 
+                                     TextColor="{DynamicResource MutedForegroundBrush}"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Frame>
+
+
+                    <!-- Level & XP -->
+                    <Frame 
+                        Background="{DynamicResource CardBrush}"
+                        BorderColor="{DynamicResource BorderBrush}"
+                        CornerRadius="12"
+                        Padding="10"
+                        HasShadow="true"
+                        VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="8" VerticalOptions="Center" HorizontalOptions="Center">
+                            <HorizontalStackLayout Spacing="8" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image x:Name="XpIcon"
+                                 WidthRequest="20"
+                                 HeightRequest="20"
+                                 Aspect="AspectFit"
+                                 Source="zap.svg" />
+                                <Label x:Name="LevelLabel"
+                                 Text="LEVEL 1"
+                                 FontSize="16"
+                                 VerticalTextAlignment="Center" 
+                                 HorizontalTextAlignment="Center"/>
+                            </HorizontalStackLayout>
+
+                            <ProgressBar x:Name="XpProgressBar"
+                                    Progress="0"
+                                    WidthRequest="120"
+                                    HeightRequest="6" 
+                                    HorizontalOptions="Fill"/>
+
+                            <Label x:Name="XpLabel"
+                                 Text="0 / 100 XP"
+                                 FontSize="12"
+                                 HorizontalTextAlignment="Center"
+                                 TextColor="{DynamicResource MutedForegroundBrush}"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </HorizontalStackLayout>
+
+                <!-- Theme Toggle -->
+                <Frame Grid.Column="2"
+                       Background="{DynamicResource CardBrush}"
+                       BorderColor="{DynamicResource BorderBrush}"
+                       CornerRadius="12"
+                       Padding="6"
+                       HasShadow="True"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End">
+                    <ImageButton x:Name="ThemeButton"
+                                 Source="sun.svg"
+                                 BackgroundColor="Transparent"
+                                 BorderWidth="0"
+                                 Clicked="OnThemeToggleClicked"
+                                 WidthRequest="36"
+                                 HeightRequest="36" />
+                </Frame>
+            </Grid>
+            <!--#endregion-->
+
+            <!-- <Label
+                Text="MOMENTUM"
+                Style="{StaticResource Headline}"
+                HorizontalTextAlignment="Center"
+                SemanticProperties.HeadingLevel="Level1" />
+            -->
+
+            <!--  Timer Control -->
+            <controls:TimerControl x:Name="MyTimer"
+                                   HorizontalOptions="Center" />
+
+            <!-- Daily Prompt Display -->
+            <Label x:Name="PromptLabel"
+                   Text="Loading Daily Prompt"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Medium"
+                   TextColor="Gray" />
+
+            <!-- Prompt Response Box -->
+            <Editor x:Name="PromptResponse"                    
+                     AutoSize="TextChanges"
+                     Placeholder="Enter your response..."/>
+
+            <!-- Buttons to control the timer -->
+            <Button
+                Text="Start Timer"
+                Clicked="OnStartClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                Text="Stop Timer"
+                Clicked="OnStopClicked"
+                HorizontalOptions="Fill" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+    <Frame Grid.Row="1"
+           Padding="10"
+           HasShadow="False"
+           BackgroundColor="{DynamicResource CardBrush}"
+           BorderColor="{DynamicResource BorderBrush}" >
+        <HorizontalStackLayout Spacing="12" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+            <!-- Journal -->
+            <Button x:Name="JournalButton"
+                    Text="Journal"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnJournalClicked" />
+
+            <!-- History -->
+            <Button x:Name="HistoryBUtton"
+                    Text="History"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="OnHistoryClicked" />
+        </HorizontalStackLayout>
+    </Frame>
+    </Grid>
+</ContentPage>

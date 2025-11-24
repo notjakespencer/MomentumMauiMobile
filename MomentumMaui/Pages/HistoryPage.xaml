@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MomentumMaui.HistoryPage"
+             Title="History">
+
+    <VerticalStackLayout Padding="20" Spacing="12">
+        <Label Text="Journal History"
+               FontAttributes="Bold"
+               FontSize="22"
+               HorizontalOptions="Center" />
+
+        <!-- Placeholder calendar area — replace with a proper calendar control if you add one -->
+        <Frame Background="{DynamicResource CardBrush}"
+               BorderColor="{DynamicResource BorderBrush}"
+               CornerRadius="12"
+               Padding="12">
+            <VerticalStackLayout>
+                <Label Text="Calendar view coming soon."
+                       FontSize="16"
+                       HorizontalOptions="Center" />
+                <Label Text="(Replace this placeholder with a calendar / calendar grid.)"
+                       FontSize="12"
+                       TextColor="{DynamicResource MutedForegroundBrush}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Example: date picker to inspect entries by date -->
+        <HorizontalStackLayout Spacing="10">
+            <DatePicker x:Name="HistoryDatePicker" />
+            <Button Text="Open Entry" Clicked="OnOpenEntryClicked" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

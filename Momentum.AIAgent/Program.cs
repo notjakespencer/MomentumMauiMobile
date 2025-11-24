@@ -1,4 +1,5 @@
-﻿using Azure;
+/*
+using Azure;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
@@ -16,10 +17,10 @@ using System.Threading.Tasks;
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set");
 var deploymentName = System.Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4.1";
 
-/*
+
 string endpoint = config["endpoint"];
 string key = config["key"];
-*/
+
 
 AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
@@ -58,4 +59,5 @@ while (true)
     }
 
     //take response and parse it into the mortgage class
-}
+}*/
+
