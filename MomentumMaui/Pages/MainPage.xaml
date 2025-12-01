@@ -183,6 +183,7 @@
                     WidthRequest="36"
                     HeightRequest="36"
                     Aspect="AspectFit"
+                    Margin="0, 0, 75, 0"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Journal" />
                 
@@ -195,6 +196,7 @@
                     WidthRequest="36"
                     HeightRequest="36"
                     Aspect="AspectFit"
+                    Margin="75, 0, 0, 0"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="History" />
             </HorizontalStackLayout>

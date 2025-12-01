@@ -27,8 +27,8 @@ namespace MomentumMaui
 
         private async void OnOpenEntryClicked(object sender, EventArgs e)
         {
-            // Placeholder action — hook this into your journal storage to open the selected date's entry.
-            await DisplayAlertAsync("History", $"Open entry for {HistoryDatePicker.Date:d}", "OK");
+            // DatePicker was removed from the UI. Show a neutral message or open the selected entry when a date is chosen from the calendar.
+            await DisplayAlert("History", "No date picker available. Select a date from the calendar to open an entry.", "OK");
         }
 
         // Navigate back to the Journal page when the journal image/button is tapped.
