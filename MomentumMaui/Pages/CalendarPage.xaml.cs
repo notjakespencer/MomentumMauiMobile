@@ -1,5 +1,7 @@
 using Microsoft.Maui.Controls;
 using System;
+using System.Collections.Generic;
+using MomentumMaui.Controls;
 
 namespace MomentumMaui
 {
@@ -8,9 +10,19 @@ namespace MomentumMaui
         public CalendarPage()
         {
             InitializeComponent();
+            this.Loaded += CalendarPage_Loaded;
+        }
 
-            // Set initial date in code to avoid x:Static / assembly mapping issues in XAML
-            HistoryDatePicker.Date = DateTime.Now;
+        private void CalendarPage_Loaded(object? sender, EventArgs e)
+        {
+            this.Loaded -= CalendarPage_Loaded;
+            var myCalendar = this.FindByName<Controls.CalendarGrid>("MyCalendar");
+            if (myCalendar == null) return;
+
+            myCalendar.CurrentMonth = DateTime.Now;
+
+            // Do not populate demo entries here. Leave Entries empty so days render neutral when no entry exists.
+            myCalendar.Entries = new List<CalendarGrid.CalendarGridEntry>();
         }
 
         private async void OnOpenEntryClicked(object sender, EventArgs e)

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MomentumMaui.Controls"
              x:Class="MomentumMaui.CalendarPage"
              Title="Calendar">
 
@@ -8,24 +9,19 @@
     <!-- Content -->
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="12">
-        <Label Text="Journal History"
+        <Label Text="Your Journal History"
                FontAttributes="Bold"
                FontSize="22"
                HorizontalOptions="Center" />
 
-        <!-- Placeholder calendar area -->
-        <Border Background="{DynamicResource CardBrush}"
-                Padding="12">
-          <VerticalStackLayout>
-            <Label Text="Calendar view coming soon."
-                   FontSize="16"
-                   HorizontalOptions="Center" />
-            <Label Text="(Replace this placeholder with a calendar / calendar grid.)"
-                   FontSize="12"
-                   TextColor="{DynamicResource MutedForegroundBrush}"
-                   HorizontalOptions="Center" />
-          </VerticalStackLayout>
-        </Border>
+        <Label Text="Reflect on your journey and track your moods over time"
+               FontAttributes="None"
+               FontSize="18"
+               TextColor="Gray"
+               HorizontalOptions="Center" />
+
+                <!-- Calendar control (replaces placeholder area) -->
+        <controls:CalendarGrid x:Name="MyCalendar" />
 
         <!-- Example: date picker to inspect entries by date -->
         <HorizontalStackLayout Spacing="10">
