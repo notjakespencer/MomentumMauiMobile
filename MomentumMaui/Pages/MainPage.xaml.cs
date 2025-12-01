@@ -18,6 +18,13 @@ namespace MomentumMaui
 
             // Subscribe to the timer completion event
             MyTimer?.TimerCompleted += OnTimerCompleted;
+
+            // Start MyTimer when the user begins typing in the PromptResponse editor
+            var promptEditor = this.FindByName<Editor>("PromptResponse");
+            if (promptEditor != null)
+            {
+                promptEditor.TextChanged += PromptResponse_TextChanged;
+            }
         }
         
         void UpdateThemeIcon()
@@ -149,6 +156,24 @@ namespace MomentumMaui
             // Final fallback: create and open a new Window containing the navigation page
             var newWindow = new Window(navPage);
             Application.Current?.OpenWindow(newWindow);
+        }
+
+        // Start the existing MyTimer when the user begins typing (first non-empty change).
+        private void PromptResponse_TextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (MyTimer == null) return;
+
+            // If timer is already active, do nothing.
+            if (MyTimer.IsActive) return;
+
+            var oldText = e?.OldTextValue ?? string.Empty;
+            var newText = e?.NewTextValue ?? string.Empty;
+
+            // Start only on the transition from empty -> non-empty (first typed character)
+            if (string.IsNullOrEmpty(oldText) && !string.IsNullOrEmpty(newText))
+            {
+                MyTimer.IsActive = true;
+            }
         }
     }
 }

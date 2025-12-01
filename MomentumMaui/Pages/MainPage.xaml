@@ -4,9 +4,11 @@
              xmlns:controls="clr-namespace:MomentumMaui.Controls"
              x:Class="MomentumMaui.MainPage"
              Title=""
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             Background="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}">
 
     <Grid RowDefinitions="*, Auto" ColumnDefinitions="*">
+        <Border Background="{StaticResource BackgroundBrush}" Grid.Row="0" Stroke="Transparent" StrokeThickness="0">
         <ScrollView Grid.Row="0">
             <!-- Use two weighted spacers with different weights so the timer sits below center
                  but not too low. Adjust the '*' weights to tune the vertical position. -->
@@ -116,15 +118,35 @@
                                        VerticalOptions="Center"
                                        Margin="0,25,0,0" />
 
+                <HorizontalStackLayout Grid.Row="2"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Spacing="8"
+                                       Margin="0, 0, 0, 0">
+                    <Image Source="clock.svg"
+                           WidthRequest="14"
+                           HeightRequest="14"
+                           Aspect="AspectFit"
+                           VerticalOptions="Center"
+                           AutomationProperties.IsInAccessibleTree="True"
+                           AutomationProperties.Name="Clock icon" />
+                    <Label x:Name="TimerHintLabel"
+                           Text="Start typing to begin"
+                           HorizontalTextAlignment="Center"
+                           FontSize="14"
+                           TextColor="{DynamicResource MutedForegroundBrush}"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
                 <!-- Prompt (row 2) - 20px gap from timer -->
                 <Border x:Name="PromptBorder"
-                        Grid.Row="2"                        
+                        Grid.Row="3"                        
                         WidthRequest="400"
                         MaximumWidthRequest="600"
                         HorizontalOptions="Center"
                         Margin="0, 20, 0, 5"
                         Background="{DynamicResource CardBrush}"
-                        Stroke="Transparent">
+                        Stroke="White">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="12" />
                     </Border.StrokeShape>
@@ -138,9 +160,10 @@
                 </Border>
 
                 <!-- Prompt Response Box (row 4) - moved ~20px under the Prompt -->
-                <Border Grid.Row="3"
+                <Border Grid.Row="4"
                         Margin="0, 5, 0, 0"
                         WidthRequest="400"
+                        HeightRequest="250"
                         HorizontalOptions="Center"
                         Padding="6"
                         Background="{DynamicResource CardBrush}" >
@@ -150,29 +173,29 @@
 
                     <Editor x:Name="PromptResponse"
                         AutoSize="TextChanges"
-                        Placeholder="Enter your response..."
+                        Placeholder="Start writing your thoughts..."
                         FontSize="18"
                         BackgroundColor="{DynamicResource CardBrush}"
                         HorizontalOptions="Fill"
-                        VerticalOptions="Center" />
+                        VerticalOptions="Start" />
                 </Border>
 
                 <!-- Buttons to control the timer (row 5) -->
                 <VerticalStackLayout Grid.Row="5" Spacing="8">
-                    <Button Text="Start Timer"
+                    <Button Text="Complete Entry"
                             Clicked="OnStartClicked"
                             HorizontalOptions="Fill" />
 
-                    <Button Text="Stop Timer"
-                            Clicked="OnStopClicked"
-                            HorizontalOptions="Fill" />
+                    
                 </VerticalStackLayout>
             </Grid>
         </ScrollView>
+        </Border>    
 
         <Border Grid.Row="1"
                Padding="10"
-               Background="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkBackground}}" >
+               Background="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}"
+                Stroke="Transparent">
             <HorizontalStackLayout Spacing="12" HorizontalOptions="Center" VerticalOptions="Center">
                 <!-- Journal -->
                 <ImageButton

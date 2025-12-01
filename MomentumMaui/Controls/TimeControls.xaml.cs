@@ -24,7 +24,7 @@ namespace MomentumMaui.Controls
             set
             {
                 _isActive = value;
-                StatusLabel.Text = value ? "remaining" : "ready";
+                StatusLabel.Text = value ? "ready" : "remaining";
 
                 if (value && _timer == null)
                 {
@@ -65,7 +65,7 @@ namespace MomentumMaui.Controls
             UpdateDisplay();
         }
 
-        private void OnTimerTick(object sender, ElapsedEventArgs e)
+        private void OnTimerTick(object? sender, ElapsedEventArgs e)
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
