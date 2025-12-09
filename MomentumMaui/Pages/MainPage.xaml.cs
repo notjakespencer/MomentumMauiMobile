@@ -60,6 +60,27 @@ namespace MomentumMaui
             UpdateUI();
             UpdateThemeIcon();
 
+            // If user already completed today, show the success card and hide main content.
+            if (HasCompletedToday())
+            {
+                try
+                {
+                    var fileName = Path.Combine(FileSystem.AppDataDirectory, $"journal_{DateTime.Now:yyyyMMdd}.json");
+                    var completedAt = File.Exists(fileName) ? File.GetLastWriteTime(fileName) : DateTime.Now;
+                    ShowSuccessOverlay(completedAt);
+                }
+                catch
+                {
+                    // ignore filesystem errors here; still show overlay using now
+                    ShowSuccessOverlay(DateTime.Now);
+                }
+            }
+            else
+            {
+                // Ensure main content visible if not completed (in case it was hidden earlier)
+                if (this.FindByName<VisualElement>("MainContent") is VisualElement main) main.IsVisible = true;
+            }
+
             // Start watching for local midnight to reset prompt/completion state automatically
             StartMidnightWatcher();
         }
@@ -171,6 +192,12 @@ namespace MomentumMaui
 
             // New day: clear completion so user can complete today's prompt
             Preferences.Remove(KEY_COMPLETED_DATE);
+
+            // Ensure the success overlay is hidden and main content visible when a new day starts
+            var success = this.FindByName<VisualElement>("SuccessOverlay");
+            if (success != null) success.IsVisible = false;
+            var main = this.FindByName<VisualElement>("MainContent");
+            if (main != null) main.IsVisible = true;
         }
 
         private void SaveCurrentPrompt(string text, string yyyyMMddDate)
@@ -300,7 +327,7 @@ namespace MomentumMaui
                 }
 
                 HideMoodPopup();
-                // Show success overlay; it will try to read the file and display mood
+                // Show success overlay; it will read the file and display mood/time
                 ShowSuccessOverlay(DateTime.Now);
             }
             catch (Exception ex)
@@ -531,12 +558,16 @@ namespace MomentumMaui
             }
         }
 
-        // Updated to async so we can read the today's journal and show mood.
+        // ShowSuccessOverlay now hides main content and shows the success card permanently (until next day).
         private async void ShowSuccessOverlay(DateTime completedAt)
         {
             // Hide mood picker if visible
             var moodOverlay = this.FindByName<VisualElement>("MoodOverlay");
             if (moodOverlay != null) moodOverlay.IsVisible = false;
+
+            // Hide main content so user only sees success card
+            var main = this.FindByName<VisualElement>("MainContent");
+            if (main != null) main.IsVisible = false;
 
             // Set timestamp (local user's time)
             var label = this.FindByName<Label>("CompletionTimeLabel");
@@ -589,15 +620,15 @@ namespace MomentumMaui
         {
             var success = this.FindByName<VisualElement>("SuccessOverlay");
             if (success != null) success.IsVisible = false;
+            var main = this.FindByName<VisualElement>("MainContent");
+            if (main != null) main.IsVisible = true;
         }
 
-        // Called by the OK button on the success overlay.
+        // OK now does NOT hide the success overlay: overlay remains until next day reset.
         private void OnSuccessOkClicked(object? sender, EventArgs e)
         {
-            HideSuccessOverlay();
-
-            // Optionally clear the editor / navigation or leave user on the same screen.
-            // Example: clear the editor so it shows as disabled state remains (completed).
+            // Do not call HideSuccessOverlay(); we want the success card to remain visible.
+            // Optionally clear the editor text for tidiness while leaving the overlay up.
             var editor = this.FindByName<Editor>("PromptResponse");
             if (editor != null)
             {
