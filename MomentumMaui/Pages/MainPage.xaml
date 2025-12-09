@@ -140,11 +140,11 @@
 
                 <!-- Prompt (row 2) - 20px gap from timer -->
                 <Border x:Name="PromptButton"
-                        Grid.Row="3"                        
+                        Grid.Row="3"
                         WidthRequest="400"
                         MaximumWidthRequest="600"
                         HorizontalOptions="Center"
-                        Margin="0, 20, 0, 5"
+                        Margin="0, 5, 0, 5"
                         Padding="0, 10, 0, 5"
                         Background="{DynamicResource CardBrush}"
                         Stroke="White">
@@ -163,7 +163,8 @@
                                  Text="Loading daily prompt"
                                  FontSize="18"
                                  HorizontalTextAlignment="Center"
-                                 LineBreakMode="TailTruncation"
+                                 LineBreakMode="WordWrap"
+                                 MaxLines="3"
                                  TextColor="{DynamicResource MutedForegroundBrush}" />
 
                             <Label x:Name="PromptHintLabel"
@@ -200,17 +201,90 @@
                         VerticalOptions="Start" />
                 </Border>
 
-                <!-- Buttons to control the timer (row 5) -->
+                <!-- Submission Button -->
                 <VerticalStackLayout Grid.Row="5" Spacing="8">
-                    <Button Text="Complete Entry"
+                    <Button x:Name="CompleteButton"
+                            Text="Complete Entry"
                             Clicked="OnSubmitClicked"
                             HorizontalOptions="Fill" />
 
-                    
                 </VerticalStackLayout>
-            </Grid>
+
+                </Grid>
         </ScrollView>
-        </Border>    
+        </Border>
+
+        <Grid x:Name="SuccessOverlay"
+              IsVisible="False"
+              Grid.RowSpan="2"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill"
+              Background="{DynamicResource BackgroundBrush}"
+              AutomationProperties.IsInAccessibleTree="True"
+              AutomationProperties.Name="Success overlay">
+          <!-- center the success card -->
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+          </Grid.RowDefinitions>
+
+          <Border Background="{DynamicResource CardBrush}"
+                  Stroke="Transparent"
+                  Padding="16"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center"
+                  WidthRequest="360"
+                  AutomationProperties.IsInAccessibleTree="True"
+                  AutomationProperties.Name="Success card">
+            <Border.StrokeShape>
+              <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="12">
+              <Label Text="You did it!"
+                     FontSize="20"
+                     FontAttributes="Bold"
+                     HorizontalTextAlignment="Center" />
+
+              <Label Text="You've completed today's journal entry. Come back tomorrow for a new prompt!"
+                     FontSize="14"
+                     HorizontalTextAlignment="Center"
+                     TextColor="{DynamicResource MutedForegroundBrush}" />
+
+              <!-- Mood display -->
+              <Label x:Name="CompletionMoodLabel"
+                     Text="—"
+                     FontSize="18"
+                     FontAttributes="Bold"
+                     HorizontalTextAlignment="Center"
+                     IsVisible="False" />
+
+              <Border Background="{DynamicResource BackgroundBrush}"
+                      Padding="12"
+                      Margin="0,8,0,0">
+                <Border.StrokeShape>
+                  <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="6">
+                  <Label Text="Today's entry completed at:"
+                         FontSize="12"
+                         TextColor="{DynamicResource MutedForegroundBrush}" />
+                  <Label x:Name="CompletionTimeLabel"
+                         Text="--:--"
+                         FontSize="16"
+                         FontAttributes="Bold" />
+                </VerticalStackLayout>
+              </Border>
+
+              <Button Text="OK"
+                      HorizontalOptions="Center"
+                      WidthRequest="120"
+                      Clicked="OnSuccessOkClicked" />
+            </VerticalStackLayout>
+          </Border>
+        </Grid>
 
         <Border Grid.Row="1"
                Padding="10"
@@ -229,7 +303,16 @@
                     Margin="0, 0, 75, 0"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Journal" />
-                
+
+                <!-- RESET (TEST) button - visible in debug builds only -->
+                <Button x:Name="ResetProgressButton"
+                        Text="Reset (Test)"
+                        Clicked="OnResetProgressClicked"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        WidthRequest="120"
+                        IsVisible="True" />
+
                 <!-- History -->
                 <ImageButton
                     x:Name="HistoryImageButton"
@@ -242,7 +325,114 @@
                     Margin="75, 0, 0, 0"
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="History" />
+
+
             </HorizontalStackLayout>
         </Border>
+
+        <!-- MoodOverlay: centered block sized to 90% with rounded corners -->
+        <Grid x:Name="MoodOverlay"
+              IsVisible="False"
+              Grid.RowSpan="2"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill"
+              Background="#80000000"
+              InputTransparent="False"
+              AutomationProperties.IsInAccessibleTree="True"
+              AutomationProperties.Name="Mood selection overlay">
+          <!-- Center cell = 90% of screen -->
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.05*" />
+            <ColumnDefinition Width="0.90*" />
+            <ColumnDefinition Width="0.05*" />
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="0.05*" />
+            <RowDefinition Height="0.90*" />
+            <RowDefinition Height="0.05*" />
+          </Grid.RowDefinitions>
+
+          <Border Grid.Column="1" Grid.Row="1"
+                  Background="{DynamicResource CardBrush}"
+                  Stroke="Transparent"
+                  Padding="16"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Fill">
+            <Border.StrokeShape>
+              <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="12">
+              <Label Text="How are you feeling today?"
+                     FontSize="30"
+                     HorizontalTextAlignment="Center"
+                     FontAttributes="Bold" />
+
+              <Label Text="Choose the mood that best describes your day"
+                     Opacity="0.8"
+                     FontSize="20"
+                     HorizontalTextAlignment="Center"
+                     TextColor="Grey" />
+
+              <VerticalStackLayout Spacing="8" Margin="0,8,0,0">
+                        <Button Text="🤩 Amazing"
+                                Background="{StaticResource MoodAmazingBrush}"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="80"
+                                Clicked="OnMoodSelected"
+                                Pressed="OnMoodPressed"
+                                Released="OnMoodReleased"/>
+
+                        <Button Text="😊 Good"
+                                Background="{StaticResource MoodGoodBrush}"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="80"
+                                Clicked="OnMoodSelected"
+                                Pressed="OnMoodPressed"
+                                Released="OnMoodReleased"/>
+
+                        <Button Text="😐 Okay"
+                                Background="{StaticResource MoodOkayBrush}"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="80"
+                                Clicked="OnMoodSelected"
+                                Pressed="OnMoodPressed"
+                                Released="OnMoodReleased" />
+
+                        <Button Text="😔 Tough"
+                                Background="{StaticResource MoodToughBrush}"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="80"
+                                Clicked="OnMoodSelected"
+                                Pressed="OnMoodPressed"
+                                Released="OnMoodReleased"/>
+
+                        <Button Text="😢 Difficult"
+                                Background="{StaticResource MoodDifficultBrush}"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                CornerRadius="12"
+                                HeightRequest="80"
+                                Clicked="OnMoodSelected"
+                                Pressed="OnMoodPressed"
+                                Released="OnMoodReleased"/>
+
+              </VerticalStackLayout>
+            </VerticalStackLayout>
+          </Border>
+        </Grid>
     </Grid>
 </ContentPage>

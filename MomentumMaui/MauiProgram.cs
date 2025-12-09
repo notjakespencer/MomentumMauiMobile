@@ -24,6 +24,7 @@ namespace MomentumMaui
 #endif
 
 #if ANDROID
+
             // Remove native underline/background for Editor on Android
             Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
             {

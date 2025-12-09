@@ -10,7 +10,7 @@ namespace MomentumMaui
             InitializeComponent();
             
             // Set default theme to Dark
-            Application.Current?.UserAppTheme = AppTheme.Dark;
+            Application.Current!.UserAppTheme = AppTheme.Dark;
         }
 
         // Keep the protected accessibility to match the base Application.CreateWindow

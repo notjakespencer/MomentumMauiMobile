@@ -37,7 +37,33 @@
     <Color x:Key="LightAccent">#F5F5F4</Color>
     <Color x:Key="LightAccentForeground">#1C1917</Color>
     <Color x:Key="LightBorder">#E7E5E4</Color>
-    
+
+    <!-- Gradient brushes for moods -->
+    <LinearGradientBrush x:Key="MoodAmazingBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4ADE80" Offset="0.0" />
+        <GradientStop Color="#10B981" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="MoodGoodBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#A3E635" Offset="0.0" />
+        <GradientStop Color="#22C55E" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="MoodOkayBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FACC15" Offset="0.0" />
+        <GradientStop Color="#FB923C" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="MoodToughBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FB923C" Offset="0.0" />
+        <GradientStop Color="#F87171" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="MoodDifficultBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F87171" Offset="0.0" />
+        <GradientStop Color="#F43F5E" Offset="1.0" />
+    </LinearGradientBrush>
+
     <!-- Theme-aware Icon Color -->
     <SolidColorBrush x:Key="ThemeIconColor"
                      Color="{AppThemeBinding Light={StaticResource LightMutedForeground}, Dark={StaticResource DarkMutedForeground}}" />
