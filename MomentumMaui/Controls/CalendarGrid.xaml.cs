@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-// using Kotlin.Contracts;
 
 namespace MomentumMaui.Controls
 {
@@ -82,6 +81,7 @@ namespace MomentumMaui.Controls
 
         /// <summary>
         /// Fired when a calendar date with an entry is tapped.
+        /// Payload contains whatever the host set (e.g. JournalEntry).
         /// </summary>
         public event EventHandler<CalendarGridEntry?>? DateSelected;
 
@@ -155,10 +155,6 @@ namespace MomentumMaui.Controls
             WeekdayHeader.Children.Clear();
             var days = new[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
-            // Resolve light / dark colors for app-theme aware TextColor usage
-            var lightText = GetResourceColor("LightText", Colors.Gray);
-            var darkText = GetResourceColor("DarkText", Colors.Gray);
-
             for (var i = 0; i < 7; i++)
             {
                 var lbl = new Label
@@ -167,12 +163,9 @@ namespace MomentumMaui.Controls
                     HorizontalOptions = LayoutOptions.Center,
                     VerticalOptions = LayoutOptions.Center,
                     FontSize = 12,
-                    FontAttributes = FontAttributes.Bold
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = GetResourceColor("MutedForegroundBrush", Colors.Gray)
                 };
-
-                // Use platform/theme aware values so switching theme updates colors automatically
-                lbl.SetAppThemeColor(Label.TextColorProperty, lightText, darkText);
-
                 WeekdayHeader.Add(lbl, i, 0);
             }
         }
@@ -198,10 +191,6 @@ namespace MomentumMaui.Controls
             for (var r = 0; r < rows; r++)
                 DaysGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
 
-            // Pre-resolve theme-aware text colors for buttons (light/dark)
-            var lightText = GetResourceColor("LightText", Colors.Black);
-            var darkText = GetResourceColor("DarkText", Colors.White);
-
             // ensure enough buttons in pool and add new ones to the grid
             while (_dayButtons.Count < totalCells)
             {
@@ -214,12 +203,9 @@ namespace MomentumMaui.Controls
                     FontAttributes = FontAttributes.Bold,
                     FontSize = 14,
                     HeightRequest = 48,
-                    Background = GetResourceBrush("CalendarBrush", Color.FromRgb(243, 244, 246))
+                    Background = GetResourceBrush("CalendarBrush", Color.FromRgb(243, 244, 246)),
+                    TextColor = GetResourceColorfromBrushOrColor("TextBrush", Colors.Gray)
                 };
-
-                // Make the button's TextColor respond to theme changes
-                btn.SetAppThemeColor(Button.TextColorProperty, lightText, darkText);
-
                 _dayButtons.Add(btn);
                 DaysGrid.Add(btn, 0, 0); // initial position; we'll set row/col below
             }
@@ -242,6 +228,10 @@ namespace MomentumMaui.Controls
                 var col = i % 7;
                 Grid.SetRow(btn, row);
                 Grid.SetColumn(btn, col);
+
+                // Clear any previously assigned command to avoid stale handlers/state.
+                btn.Command = null;
+                btn.CommandParameter = null;
 
                 if (i < startDay)
                 {
@@ -274,19 +264,18 @@ namespace MomentumMaui.Controls
                         }
 
                         btn.TextColor = Colors.White;
+                        // make sure entries in the future (shouldn't happen) are not interactable
                         btn.IsEnabled = !isFuture;
+
+                        // Raise DateSelected with the pooled entry; host (CalendarPage) will show details.
                         btn.Command = new Command(() => DateSelected?.Invoke(this, entry));
                         btn.CommandParameter = entry;
                     }
                     else
                     {
                         // day without entry
-                        // Use theme-aware CalendarBrush for background
                         var calendarBrush = GetResourceBrush("CalendarBrush", Color.FromRgb(243, 244, 246));
                         btn.Background = calendarBrush;
-
-                        // Ensure the button text color remains theme-aware (uses SetAppThemeColor applied during creation)
-                        // If you need to override per-cell, use btn.SetAppThemeColor(Button.TextColorProperty, lightText, darkText);
 
                         btn.IsEnabled = false;
                         btn.Opacity = isFuture ? 0.5 : 1.0;
@@ -296,7 +285,7 @@ namespace MomentumMaui.Controls
                     {
                         // ring effect: slightly thicker border
                         btn.BorderWidth = 2;
-                        btn.BorderColor = GetResourceColor("Primary", Colors.Purple);
+                        btn.BorderColor = GetResourceColor("PrimaryColor", Colors.Purple);
                     }
                     else
                     {
@@ -325,8 +314,9 @@ namespace MomentumMaui.Controls
 
         Color GetResourceColor(string key, Color fallback)
         {
-            // Use the brush-aware resolver so resources defined as either Color or Brush are handled.
-            return GetResourceColorfromBrushOrColor(key, fallback);
+            if (Application.Current?.Resources?.TryGetValue(key, out var value) == true && value is Color c)
+                return c;
+            return fallback;
         }
     }
 }

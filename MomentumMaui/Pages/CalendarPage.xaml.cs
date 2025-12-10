@@ -1,9 +1,10 @@
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
 using MomentumMaui.Services;
 using MomentumMaui.Controls;
 using Momentum.Shared.Services;
+using Momentum.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,8 +39,12 @@ namespace MomentumMaui
 
             myCalendar.CurrentMonth = DateTime.Now;
 
-            // Leave Entries empty so days render neutral when no entry exists.
-            myCalendar.Entries = new List<CalendarGrid.CalendarGridEntry>();
+            // Load persisted journal files for the current month and map to calendar entries
+            LoadEntriesForMonth(myCalendar, myCalendar.CurrentMonth);
+
+            // Subscribe to calendar DateSelected so the page can show the full journal details popup
+            myCalendar.DateSelected -= OnCalendarDateSelected;
+            myCalendar.DateSelected += OnCalendarDateSelected;
 
             // Refresh UI counters once calendar is initialized
             RefreshStats();
@@ -73,8 +78,20 @@ namespace MomentumMaui
 
         private void OnEntrySaved(object? sender, DateTime when)
         {
-            // Ensure UI updates run on the main thread
-            MainThread.BeginInvokeOnMainThread(RefreshStats);
+            // Reload calendar entries for the currently displayed month
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    var myCalendar = this.FindByName<Controls.CalendarGrid>("MyCalendar");
+                    if (myCalendar != null)
+                        LoadEntriesForMonth(myCalendar, myCalendar.CurrentMonth);
+                }
+                catch { /* ignore errors in refresh path */ }
+
+                // Also refresh stats
+                RefreshStats();
+            });
         }
 
         private void RefreshStats()
@@ -148,6 +165,80 @@ namespace MomentumMaui
 
             var newWindow = new Window(navPage);
             MauiApplication.Current?.OpenWindow(newWindow);
+        }
+
+        // Load journal files for the provided month and populate the calendar control's Entries.
+        void LoadEntriesForMonth(Controls.CalendarGrid calendar, DateTime month)
+        {
+            try
+            {
+                var list = new List<Controls.CalendarGrid.CalendarGridEntry>();
+
+                var start = new DateTime(month.Year, month.Month, 1);
+                var end = start.AddMonths(1).AddDays(-1);
+
+                for (var d = start; d <= end; d = d.AddDays(1))
+                {
+                    var fileName = Path.Combine(FileSystem.AppDataDirectory, $"journal_{d:yyyyMMdd}.json");
+                    if (!File.Exists(fileName)) continue;
+
+                    try
+                    {
+                        var json = File.ReadAllText(fileName);
+                        var entry = System.Text.Json.JsonSerializer.Deserialize<JournalEntry>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (entry == null) continue;
+
+                        // Map the stored Mood enum to the string keys used by the calendar's brush map.
+                        var moodKey = entry.Mood switch
+                        {
+                            MoodType.VeryHappy => "amazing",
+                            MoodType.Happy => "good",
+                            MoodType.Neutral => "okay",
+                            MoodType.Sad => "tough",
+                            MoodType.VerySad => "difficult",
+                            _ => null
+                        };
+
+                        list.Add(new Controls.CalendarGrid.CalendarGridEntry
+                        {
+                            Date = entry.Date.Date,
+                            Mood = moodKey,
+                            Payload = entry // pass full JournalEntry so the page can show prompt/response/mood
+                        });
+                    }
+                    catch
+                    {
+                        // ignore individual file parse errors to avoid breaking UI for others
+                    }
+                }
+
+                calendar.Entries = list;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"LoadEntriesForMonth error: {ex}");
+            }
+        }
+
+        // Calendar date clicked -> show the journal details (prompt, response, mood)
+        private async void OnCalendarDateSelected(object? sender, CalendarGrid.CalendarGridEntry? entry)
+        {
+            if (entry == null)
+            {
+                await DisplayAlertAsync("No Entry", "No journal entry exists for that date.", "OK");
+                return;
+            }
+
+            // If payload contains a JournalEntry, show its details.
+            if (entry.Payload is JournalEntry je)
+            {
+                await Navigation.PushModalAsync(new EntryDetailsPage(je));
+                return;
+            }
+
+            // If payload is not a JournalEntry, fall back to showing whatever is present
+            var fallbackMsg = $"Date: {entry.Date:d}\nMood: {entry.Mood ?? "(unknown)"}\n\nNo further details available.";
+            await DisplayAlertAsync("Entry Details", fallbackMsg, "OK");
         }
     }
 }

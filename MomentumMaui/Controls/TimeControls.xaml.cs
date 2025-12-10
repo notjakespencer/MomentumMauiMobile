@@ -11,6 +11,7 @@ namespace MomentumMaui.Controls
         private const double TotalDuration = 120.0;
         private const double TickInterval = 50;
         private const double DecrementPerTick = TotalDuration / (TotalDuration * 1000 / TickInterval);
+        public double TimeTakenSeconds { get; set; }
 
         public TimerControl()
         {
@@ -48,6 +49,23 @@ namespace MomentumMaui.Controls
         }
 
         public event EventHandler TimerCompleted;
+
+        public void TimeElapsed()
+        {
+            double elapsed;
+
+            if (_timeLeft <= 0) elapsed = TotalDuration;
+            else
+            {
+                elapsed = TotalDuration - _timeLeft;
+                if (elapsed < 0) elapsed = 0;
+                if (elapsed > TotalDuration) elapsed = TotalDuration;
+            }
+
+            TimeTakenSeconds = elapsed;
+            StopTimer();
+            TimerCompleted?.Invoke(this, EventArgs.Empty);
+        }
 
         private void StartTimer()
         {

@@ -388,9 +388,12 @@ namespace MomentumMaui
             {
                 var entry = new JournalEntry
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Date = DateTime.Now.Date,
                     EntryText = response,
-                    Mood = MoodType.Neutral
+                    Mood = MoodType.Neutral,
+                    PromptText = PromptLabel?.Text ?? Preferences.Get(KEY_PROMPT_TEXT, string.Empty),
+                    CreatedAt = DateTime.UtcNow
                 };
 
                 // Persist to a file in the app data directory (one entry per day)
