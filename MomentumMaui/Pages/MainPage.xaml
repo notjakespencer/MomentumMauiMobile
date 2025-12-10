@@ -151,38 +151,27 @@
                             HorizontalOptions="Center"
                             Margin="0, 5, 0, 5"
                             Padding="0, 10, 0, 5"
-                            Background="{DynamicResource CardBrush}"
-                            >
+                            Background="{DynamicResource CardBrush}" >
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
 
                         <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
                             <Image Source="wand_sparkles.svg"
-                                 WidthRequest="18"
-                                 HeightRequest="18"
-                                 Aspect="AspectFit"
-                                 HorizontalOptions="Center" />
+                                   WidthRequest="18"
+                                   HeightRequest="18"
+                                   Aspect="AspectFit"
+                                   HorizontalOptions="Center" />
 
                             <Label x:Name="PromptLabel"
-                                 Text="Loading daily prompt"
-                                 FontSize="18"
-                                 HorizontalTextAlignment="Center"
-                                 LineBreakMode="WordWrap"
-                                 MaxLines="3"
-                                 TextColor="{DynamicResource MutedForegroundBrush}" />
-
-                            <Label x:Name="PromptHintLabel"
-                                 Text="OR CLICK TO GENERATE NEW"
-                                 FontSize="12"
-                                 TextColor="{DynamicResource MutedForegroundBrush}"
-                                 Opacity="0.8"
-                                 HorizontalTextAlignment="Center" />
+                                   Text="Loading daily prompt"
+                                   FontSize="18"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap"
+                                   MaxLines="3"
+                                   Margin="0, 0, 0, 15"
+                                   TextColor="{DynamicResource MutedForegroundBrush}" />
                         </VerticalStackLayout>
-
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnPromptClicked" NumberOfTapsRequired="1" />
-                        </Border.GestureRecognizers>
                     </Border>
 
                     <!-- Prompt Response Box (row 4) - moved ~20px under the Prompt -->
@@ -313,12 +302,6 @@
                 </VerticalStackLayout>
               </Border>
 
-              <!--
-              <Button Text="OK"
-                      HorizontalOptions="Center"
-                      WidthRequest="120"
-                      Clicked="OnSuccessOkClicked" /> 
-              -->
             </VerticalStackLayout>
           </Border>
         </Grid>
@@ -441,11 +424,11 @@
                     WidthRequest="36"
                     HeightRequest="36"
                     Aspect="AspectFit"
-                    Margin="0, 0, 75, 0"
+                    Margin="0, 0, 75, 0" 
                     AutomationProperties.IsInAccessibleTree="True"
                     AutomationProperties.Name="Journal" />
 
-                <!-- RESET (TEST) button -->
+                <!-- RESET (TEST) button  REMOVE BEFORE DEPLOYMENT-->
                 <Button x:Name="ResetProgressButton"
                         Text="Reset (Test)"
                         Clicked="OnResetProgressClicked"
