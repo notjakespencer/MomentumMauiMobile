@@ -7,37 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MomentumMaui", "MomentumMau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Momentum.Shared", "Momentum.Shared\Momentum.Shared.csproj", "{C36CCBE4-078E-47A4-B852-DB5C3E0845A3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base44", "Base44", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{1BCE7A28-8C97-43D1-A70B-44F807A0E4EE}"
-	ProjectSection(SolutionItems) = preProject
-		Base44\Pages\History.js = Base44\Pages\History.js
-		Base44\Pages\Journal.js = Base44\Pages\Journal.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{A1077C00-77FD-447D-BEE5-4429532EE692}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Entities", "Entities", "{AE4A36AB-946E-452C-8484-25C1C5AB59EB}"
-	ProjectSection(SolutionItems) = preProject
-		Base44\Entities\JournalEntry.json = Base44\Entities\JournalEntry.json
-		Base44\Entities\User.json = Base44\Entities\User.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Journal", "Journal", "{0A7D96A9-4EC8-4A16-B35F-8C90A3F61FF3}"
-	ProjectSection(SolutionItems) = preProject
-		Base44\Components\Journal\MoodSelector.jsx = Base44\Components\Journal\MoodSelector.jsx
-		Base44\Components\Journal\PromptCard.jsx = Base44\Components\Journal\PromptCard.jsx
-		Base44\Components\Journal\StatsHeader.jsx = Base44\Components\Journal\StatsHeader.jsx
-		Base44\Components\Journal\ThemeToggle.jsx = Base44\Components\Journal\ThemeToggle.jsx
-		Base44\Components\Journal\Timer.js = Base44\Components\Journal\Timer.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calendar", "Calendar", "{2CA18BF4-C403-428A-A10D-A5D8A8121A13}"
-	ProjectSection(SolutionItems) = preProject
-		Base44\Components\Calendar\CalendarGrid.jsx = Base44\Components\Calendar\CalendarGrid.jsx
-		Base44\Components\Calendar\EntryModal.jsx = Base44\Components\Calendar\EntryModal.jsx
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Momentum.AIAgent", "Momentum.AIAgent\Momentum.AIAgent.csproj", "{F988EE03-0E05-6084-457A-E1C9BDDDA2C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIAgent", "AIAgent\AIAgent.csproj", "{02FB8035-E66F-4EEE-BB71-BD393791C53D}"
@@ -68,13 +37,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{1BCE7A28-8C97-43D1-A70B-44F807A0E4EE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{A1077C00-77FD-447D-BEE5-4429532EE692} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{AE4A36AB-946E-452C-8484-25C1C5AB59EB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{0A7D96A9-4EC8-4A16-B35F-8C90A3F61FF3} = {A1077C00-77FD-447D-BEE5-4429532EE692}
-		{2CA18BF4-C403-428A-A10D-A5D8A8121A13} = {A1077C00-77FD-447D-BEE5-4429532EE692}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DECF0B5B-7CF9-44C9-ABA3-9E3308702C93}
