@@ -60,6 +60,7 @@ Future Features
 - Cloud sync & backups: sync entries and user stats via Azure Storage or another cloud backend for multi-device continuity.
 - Calendar export and analytics: export mood history and XP progress; visual analytics for streaks and writing habits.
 Build & run (local)
+- Push notifications to notify users to complete their entry daily.
 
 1. Open `SkribeMaui.sln` in Visual Studio (2022/2023) or use the CLI.
 2. Select target device/emulator and Run (F5) from Visual Studio.
