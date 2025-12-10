@@ -152,7 +152,7 @@
                             Margin="0, 5, 0, 5"
                             Padding="0, 10, 0, 5"
                             Background="{DynamicResource CardBrush}"
-                            Stroke="White">
+                            >
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="12" />
                         </Border.StrokeShape>
