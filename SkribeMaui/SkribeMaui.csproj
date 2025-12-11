@@ -65,7 +65,7 @@
 		<AndroidSigningKeyPass>$(ANDROID_KEY_PASS)</AndroidSigningKeyPass>
 		<AndroidSigningStorePass>$(ANDROID_STORE_PASS)</AndroidSigningStorePass>
 	</PropertyGroup>
-I'm working on releasing this for testing via Google Play Console. Which file do I need to upload for the release bundle?
+	
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#292524" />
