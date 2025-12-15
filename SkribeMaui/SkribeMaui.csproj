@@ -27,8 +27,8 @@
 		<ApplicationId>com.companyname.skribe</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+		<ApplicationVersion>2</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
@@ -50,21 +50,22 @@
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
-	  <AndroidUseAapt2>True</AndroidUseAapt2>
-	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<KeyStore>C:\Users\SP\repos\SkribeMobile\SkribeMaui\signing\skribe-release-key.keystore</KeyStore>
+		<KeyAlias>skribe</KeyAlias>
+		<KeyPassword>$(ANDROID_KEY_PASSWORD)</KeyPassword>
+		<KeyStorePassword>$(ANDROID_KEYSTORE_PASSWORD)</KeyStorePassword>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<!-- Keep signing here but do not override Android packaging -->
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
 		<AndroidKeyStore>True</AndroidKeyStore>
-		<AndroidSigningKeyStore>$(MSBuildThisFileDirectory)signing\my-release-key.keystore</AndroidSigningKeyStore>
+		<AndroidSigningKeyStore>signing\skribe-release-key.keystore</AndroidSigningKeyStore>
+		<AndroidSigningStorePass>$(ANDROID_KEYSTORE_PASSWORD)</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>skribe</AndroidSigningKeyAlias>
-		<AndroidSigningKeyPass>$(ANDROID_KEY_PASS)</AndroidSigningKeyPass>
-		<AndroidSigningStorePass>$(ANDROID_STORE_PASS)</AndroidSigningStorePass>
+		<AndroidSigningKeyPass>$(ANDROID_KEY_PASSWORD)</AndroidSigningKeyPass>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#292524" />
