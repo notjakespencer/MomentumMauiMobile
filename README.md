@@ -87,5 +87,4 @@ Contributing
 
 Notes
 
-- Targets .NET 10 and uses MAUI APIs. Replace placeholder screenshots in `Resources/Docs/images/` and commit them so the README displays real images on GitHub.
 - Entries are currently stored locally; cloud sync / backup via Azure Storage is planned as part of backend integration.
