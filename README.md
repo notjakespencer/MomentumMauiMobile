@@ -65,20 +65,6 @@ Build & run (local)
 1. Open `SkribeMaui.sln` in Visual Studio (2022/2023) or use the CLI.
 2. Select target device/emulator and Run (F5) from Visual Studio.
 
-CLI examples
-
-- Android debug build:
-
-```bash
-dotnet build -f net10.0-android -c Debug
-```
-
-- Android publish (AAB) for release:
-
-```bash
-dotnet publish -f net10.0-android -c Release -o ./publish /p:AndroidPackageFormat=aab
-```
-
 Contributing
 
 1. Fork the repository and create a feature branch.
