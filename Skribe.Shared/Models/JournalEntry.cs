@@ -14,7 +14,7 @@ namespace Skribe.Shared.Models
         public int PromptID { get; set; }
         public string PromptText { get; set; } = string.Empty;
         public string EntryText { get; set; } = string.Empty;
-
+        public double TimeTakenSeconds { get; set; }
         public MoodType Mood { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

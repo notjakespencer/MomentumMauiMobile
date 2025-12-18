@@ -52,19 +52,25 @@ namespace SkribeMaui.Controls
 
         public void TimeElapsed()
         {
-            double elapsed;
-
-            if (_timeLeft <= 0) elapsed = TotalDuration;
-            else
-            {
-                elapsed = TotalDuration - _timeLeft;
-                if (elapsed < 0) elapsed = 0;
-                if (elapsed > TotalDuration) elapsed = TotalDuration;
-            }
-
-            TimeTakenSeconds = elapsed;
-            StopTimer();
+            CaptureElapsed(true);
             TimerCompleted?.Invoke(this, EventArgs.Empty);
+        }
+
+        public double CaptureElapsed(bool stopTimer = false)
+        {
+            var elapsed = CalculateElapsedSeconds();
+            TimeTakenSeconds = elapsed;
+
+            if (stopTimer) StopTimer();
+            return elapsed;
+        }
+
+        private double CalculateElapsedSeconds()
+        {
+            var elapsed = TotalDuration - _timeLeft;
+            if (elapsed < 0) elapsed = 0;
+            if (elapsed > TotalDuration) elapsed = TotalDuration;
+            return elapsed;
         }
 
         private void StartTimer()
@@ -79,7 +85,7 @@ namespace SkribeMaui.Controls
             _timer?.Stop();
             _timer?.Dispose();
             _timer = null;
-            _timeLeft = 120;
+            _timeLeft = TotalDuration;
             UpdateDisplay();
         }
 
@@ -95,8 +101,7 @@ namespace SkribeMaui.Controls
                 }
                 else
                 {
-                    StopTimer();
-                    TimerCompleted?.Invoke(this, EventArgs.Empty);
+                    TimeElapsed();
                 }
             });
         }

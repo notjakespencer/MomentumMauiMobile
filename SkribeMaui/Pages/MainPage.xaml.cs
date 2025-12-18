@@ -351,7 +351,7 @@ namespace SkribeMaui
             // Always inform the user that timer finished and whether we saved
             if (saved)
             {
-                await DisplayAlertAsync("Timer Complete", "Time is up — your entry was saved.", "OK");
+                ShowMoodPopup();
             }
             else
             {
@@ -361,11 +361,6 @@ namespace SkribeMaui
             }
         }
 
-        /// <summary>
-        /// Centralized save logic used by both manual submit and timer expiry.
-        /// If <paramref name="requireNonEmpty"/> is true the method will require user text and show a message if empty.
-        /// Returns true if an entry was saved or considered completed; false otherwise.
-        /// </summary>
         private async Task<bool> SaveEntryAsync(bool requireNonEmpty)
         {
             // Enforce one completion per day
@@ -385,6 +380,14 @@ namespace SkribeMaui
 
             try
             {
+                double elapsedSeconds = 0;
+                if (MyTimer != null)
+                {
+                    elapsedSeconds = MyTimer.TimeTakenSeconds;
+                    if (elapsedSeconds <= 0) elapsedSeconds = MyTimer.CaptureElapsed(stopTimer: true);
+                    if (elapsedSeconds < 0) elapsedSeconds = 0;
+                }
+
                 var entry = new JournalEntry
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -392,7 +395,8 @@ namespace SkribeMaui
                     EntryText = response,
                     Mood = MoodType.Neutral,
                     PromptText = PromptLabel?.Text ?? Preferences.Get(KEY_PROMPT_TEXT, string.Empty),
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    TimeTakenSeconds = elapsedSeconds
                 };
 
                 // Persist to a file in the app data directory (one entry per day)

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using Microsoft.Maui.Storage;
 using Skribe.Shared.Models;
+using SkribeMaui.Controls;
 
 namespace SkribeMaui
 {
@@ -66,7 +67,7 @@ namespace SkribeMaui
         private void ApplyMoodBrush(MoodType mood)
         {
             // resource keys defined in Resources/Styles/Colors.xaml
-            string key = mood switch
+            string? key = mood switch
             {
                 MoodType.VeryHappy => "MoodAmazingBrush",
                 MoodType.Happy => "MoodGoodBrush",
@@ -202,28 +203,35 @@ namespace SkribeMaui
         {
             try
             {
+                if (entry.TimeTakenSeconds > 0) {
+                    var seconds = entry.TimeTakenSeconds;
+                    if (seconds < 0) seconds = 0;
+                    if (seconds > 120) seconds = 120;
+
+                    ElapsedTime.Text = FormatElapsed(TimeSpan.FromSeconds(seconds));
+                    return;
+                }
+
                 TimeSpan elapsed;
                 var fileName = Path.Combine(FileSystem.AppDataDirectory, $"journal_{entry.Date:yyyyMMdd}.json");
 
                 if (File.Exists(fileName))
                 {
                     var lastWriteUtc = File.GetLastWriteTimeUtc(fileName);
-
-                    // Ensure CreatedAt is treated as UTC (JournalEntry.CreatedAt stored as UTC in save code)
                     var createdUtc = entry.CreatedAt;
-                    if (createdUtc.Kind == DateTimeKind.Unspecified)
-                        createdUtc = DateTime.SpecifyKind(createdUtc, DateTimeKind.Utc);
+                    if (createdUtc.Kind == DateTimeKind.Unspecified) createdUtc = DateTime.SpecifyKind(createdUtc, DateTimeKind.Utc);
 
                     elapsed = lastWriteUtc - createdUtc;
                 }
+
                 else if (entry.CreatedAt != default)
                 {
                     var createdUtc = entry.CreatedAt;
-                    if (createdUtc.Kind == DateTimeKind.Unspecified)
-                        createdUtc = DateTime.SpecifyKind(createdUtc, DateTimeKind.Utc);
+                    if (createdUtc.Kind == DateTimeKind.Unspecified) createdUtc = DateTime.SpecifyKind(createdUtc, DateTimeKind.Utc);
 
                     elapsed = DateTime.UtcNow - createdUtc;
                 }
+
                 else
                 {
                     ElapsedTime.Text = "(unknown)";
@@ -232,12 +240,12 @@ namespace SkribeMaui
 
                 if (elapsed.TotalSeconds <= 0) elapsed = TimeSpan.Zero;
 
-                // If the user ran out of time, show the full duration (120s)
                 var maxDuration = TimeSpan.FromSeconds(120);
                 if (elapsed > maxDuration) elapsed = maxDuration;
 
                 ElapsedTime.Text = FormatElapsed(elapsed);
             }
+
             catch
             {
                 ElapsedTime.Text = "(unknown)";
@@ -256,3 +264,7 @@ namespace SkribeMaui
         }
     }
 }
+
+/*
+ * I have been testing the app for 5 days, and on one of the days I let the timer run out to test the auto submit function.  When looking at the entry details it says I completed the entry in 0s, but it should say 2 minutes 0 seconds
+ */
