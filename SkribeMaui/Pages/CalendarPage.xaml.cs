@@ -22,99 +22,105 @@ namespace SkribeMaui
     public partial class CalendarPage : ContentPage
     {
         private readonly UserStateService _userStats = new();
+        private bool _swipeGesturesAttached;
 
         public CalendarPage()
         {
             InitializeComponent();
-            this.Loaded += CalendarPage_Loaded;
+            Loaded += CalendarPage_Loaded;
 
             Shell.SetNavBarIsVisible(this, false);
 
-            // Try to set the new per-edge SafeArea API if it exists at runtime;
-            // otherwise fall back to a safe iOS runtime behavior (zero page padding).
             try
             {
                 var pageType = typeof(Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific.Page);
                 var prop = pageType.GetField("SafeAreaEdgesProperty", BindingFlags.Public | BindingFlags.Static);
                 if (prop != null)
                 {
-                    // use reflection to set the attached BindableProperty when available
                     var bp = prop.GetValue(null) as BindableProperty;
                     if (bp != null)
+                    {
                         SetValue(bp, SafeAreaEdges.None);
+                    }
                 }
                 else if (DeviceInfo.Platform == DevicePlatform.iOS)
                 {
-                    // SDK does not expose the property - apply a reasonable runtime fallback
                     Padding = new Thickness(0);
                 }
             }
             catch
             {
                 if (DeviceInfo.Platform == DevicePlatform.iOS)
+                {
                     Padding = new Thickness(0);
+                }
             }
         }
 
         private void CalendarPage_Loaded(object? sender, EventArgs e)
         {
-            this.Loaded -= CalendarPage_Loaded;
-            var myCalendar = this.FindByName<Controls.CalendarGrid>("MyCalendar");
-            if (myCalendar == null) return;
+            Loaded -= CalendarPage_Loaded;
+            var myCalendar = FindByName("MyCalendar") as Controls.CalendarGrid;
+            if (myCalendar == null)
+            {
+                return;
+            }
 
             myCalendar.CurrentMonth = DateTime.Now;
 
-            // Load persisted journal files for the current month and map to calendar entries
             LoadEntriesForMonth(myCalendar, myCalendar.CurrentMonth);
+            UpdateMonthHeader(myCalendar.CurrentMonth);
 
-            // Subscribe to calendar DateSelected so the page can show the full journal details popup
             myCalendar.DateSelected -= OnCalendarDateSelected;
             myCalendar.DateSelected += OnCalendarDateSelected;
 
-            // Refresh UI counters once calendar is initialized
             RefreshStats();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            // Always refresh when page becomes visible so counters reflect latest entries
             RefreshStats();
 
-            // Subscribe to entry-saved notifications for real-time updates
             try
             {
                 NotificationService.EntrySaved += OnEntrySaved;
             }
-            catch { /* ignore registration errors */ }
+            catch
+            {
+            }
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
 
-            // Unsubscribe to avoid leaks and duplicate handlers
             try
             {
                 NotificationService.EntrySaved -= OnEntrySaved;
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         private void OnEntrySaved(object? sender, DateTime when)
         {
-            // Reload calendar entries for the currently displayed month
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 try
                 {
-                    var myCalendar = this.FindByName<Controls.CalendarGrid>("MyCalendar");
+                    var myCalendar = FindByName("MyCalendar") as Controls.CalendarGrid;
                     if (myCalendar != null)
+                    {
                         LoadEntriesForMonth(myCalendar, myCalendar.CurrentMonth);
+                        UpdateMonthHeader(myCalendar.CurrentMonth);
+                    }
                 }
-                catch { /* ignore errors in refresh path */ }
+                catch
+                {
+                }
 
-                // Also refresh stats
                 RefreshStats();
             });
         }
@@ -123,10 +129,8 @@ namespace SkribeMaui
         {
             try
             {
-                // Load persisted user state (streaks, xp, level)
                 _userStats.LoadData();
 
-                // Count journal files in the app data directory
                 var appDir = FileSystem.AppDataDirectory;
                 int totalEntries = 0;
                 try
@@ -141,16 +145,30 @@ namespace SkribeMaui
                     totalEntries = 0;
                 }
 
-                // Update labels (safe FindByName in case XAML names change)
-                var totalLabel = this.FindByName<Label>("TotalEntriesLabel");
-                var currentStreakLabel = this.FindByName<Label>("CurrentStreakLabel");
-                var longestStreakLabel = this.FindByName<Label>("LongestStreakLabel");
-                var levelLabel = this.FindByName<Label>("CurrentLevelLabel");
+                var totalLabel = FindByName("TotalEntriesLabel") as Label;
+                var currentStreakLabel = FindByName("CurrentStreakLabel") as Label;
+                var longestStreakLabel = FindByName("LongestStreakLabel") as Label;
+                var levelLabel = FindByName("CurrentLevelLabel") as Label;
 
-                if (totalLabel != null) totalLabel.Text = totalEntries.ToString();
-                if (currentStreakLabel != null) currentStreakLabel.Text = _userStats.Streak.Current.ToString();
-                if (longestStreakLabel != null) longestStreakLabel.Text = _userStats.Streak.Longest.ToString();
-                if (levelLabel != null) levelLabel.Text = _userStats.Level.ToString();
+                if (totalLabel != null)
+                {
+                    totalLabel.Text = totalEntries.ToString();
+                }
+
+                if (currentStreakLabel != null)
+                {
+                    currentStreakLabel.Text = _userStats.Streak.Current.ToString();
+                }
+
+                if (longestStreakLabel != null)
+                {
+                    longestStreakLabel.Text = _userStats.Streak.Longest.ToString();
+                }
+
+                if (levelLabel != null)
+                {
+                    levelLabel.Text = _userStats.Level.ToString();
+                }
             }
             catch (Exception ex)
             {
@@ -169,9 +187,9 @@ namespace SkribeMaui
             var journal = new MainPage();
             var navPage = new MauiNavigation(journal);
 
-            if (this.Window != null)
+            if (Window != null)
             {
-                this.Window.Page = navPage;
+                Window.Page = navPage;
                 return;
             }
 
@@ -192,8 +210,30 @@ namespace SkribeMaui
             MauiApplication.Current?.OpenWindow(newWindow);
         }
 
-        // Load journal files for the provided month and populate the calendar control's Entries.
-        void LoadEntriesForMonth(Controls.CalendarGrid calendar, DateTime month)
+        private void NavigateMonths(int monthOffset)
+        {
+            var calendar = FindByName("MyCalendar") as Controls.CalendarGrid;
+            if (calendar == null)
+            {
+                return;
+            }
+
+            var newMonth = calendar.CurrentMonth.AddMonths(monthOffset);
+            calendar.CurrentMonth = newMonth;
+
+            LoadEntriesForMonth(calendar, newMonth);
+            UpdateMonthHeader(newMonth);
+        }
+
+        private void UpdateMonthHeader(DateTime month)
+        {
+            if (FindByName("MonthLabel") is Label label)
+            {
+                label.Text = month.ToString("MMMM yyyy");
+            }
+        }
+
+        private void LoadEntriesForMonth(Controls.CalendarGrid calendar, DateTime month)
         {
             try
             {
@@ -205,15 +245,20 @@ namespace SkribeMaui
                 for (var d = start; d <= end; d = d.AddDays(1))
                 {
                     var fileName = Path.Combine(FileSystem.AppDataDirectory, $"journal_{d:yyyyMMdd}.json");
-                    if (!File.Exists(fileName)) continue;
+                    if (!File.Exists(fileName))
+                    {
+                        continue;
+                    }
 
                     try
                     {
                         var json = File.ReadAllText(fileName);
                         var entry = System.Text.Json.JsonSerializer.Deserialize<JournalEntry>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                        if (entry == null) continue;
+                        if (entry == null)
+                        {
+                            continue;
+                        }
 
-                        // Map the stored Mood enum to the string keys used by the calendar's brush map.
                         var moodKey = entry.Mood switch
                         {
                             MoodType.VeryHappy => "amazing",
@@ -228,12 +273,11 @@ namespace SkribeMaui
                         {
                             Date = entry.Date.Date,
                             Mood = moodKey,
-                            Payload = entry // pass full JournalEntry so the page can show prompt/response/mood
+                            Payload = entry
                         });
                     }
                     catch
                     {
-                        // ignore individual file parse errors to avoid breaking UI for others
                     }
                 }
 
@@ -254,16 +298,24 @@ namespace SkribeMaui
                 return;
             }
 
-            // If payload contains a JournalEntry, show its details.
             if (entry.Payload is JournalEntry je)
             {
                 await Navigation.PushModalAsync(new EntryDetailsPage(je));
                 return;
             }
 
-            // If payload is not a JournalEntry, fall back to showing whatever is present
             var fallbackMsg = $"Date: {entry.Date:d}\nMood: {entry.Mood ?? "(unknown)"}\n\nNo further details available.";
             await DisplayAlertAsync("Entry Details", fallbackMsg, "OK");
+        }
+
+        private void OnCalendarSwipedLeft(object? sender, SwipedEventArgs e)
+        {
+            NavigateMonths(1);
+        }
+
+        private void OnCalendarSwipedRight(object? sender, SwipedEventArgs e)
+        {
+            NavigateMonths(-1);
         }
     }
 }

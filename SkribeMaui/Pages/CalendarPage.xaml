@@ -123,13 +123,19 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="12" />
                     </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <SwipeGestureRecognizer Direction="Left"
+                                                Swiped="OnCalendarSwipedLeft" />
+                        <SwipeGestureRecognizer Direction="Right"
+                                                Swiped="OnCalendarSwipedRight" />
+                    </Border.GestureRecognizers>
 
                     <controls:CalendarGrid
                         x:Name="MyCalendar"
                         BackgroundColor="Transparent"
                         HorizontalOptions="Fill"
                         VerticalOptions="Fill" />
-                </Border>
+                 </Border>
 
 
         <!-- Mood legend card (compact grid layout) -->
