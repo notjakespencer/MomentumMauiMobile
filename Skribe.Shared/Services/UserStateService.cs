@@ -76,7 +76,7 @@ namespace Skribe.Shared.Services
             int earnedXP = (int)Math.Round(baseXP * multiplier);
             TotalXp += earnedXP;
 
-            Streak.Update(DateTime.UtcNow);
+            Streak.Update(DateTime.Now);
 
             Level = CalculateLevel(TotalXp);
             SaveData();

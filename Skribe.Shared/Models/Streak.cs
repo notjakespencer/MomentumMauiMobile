@@ -13,9 +13,9 @@ namespace Skribe.Shared.Models
 
         public DateTime? LastCompletedDate { get; set; }
 
-        public void Update(DateTime nowUtc)
+        public void Update(DateTime now)
         {
-            var today = nowUtc.Date;
+            var today = now.Date;
 
             if (LastCompletedDate == null)
             {
